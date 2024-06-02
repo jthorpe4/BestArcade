@@ -56,6 +56,8 @@ class RetroarchGUI:
         self.sportPreferedSetComboBox = None
         self.vsFightingPreferedSetLabel = None
         self.vsFightingPreferedSetComboBox = None
+        self.homebrewsPreferedSetLabel = None
+        self.homebrewsPreferedSetComboBox = None
         self.buttonsFrame = None
         self.verifyButton = None
         self.saveButton = None
@@ -328,6 +330,17 @@ class RetroarchGUI:
                                                           textvariable=self.guiVars['VsFightingPreferedSet'])
         self.vsFightingPreferedSetComboBox.grid(column=1, row=3, sticky="W", pady=5, padx=5)
         self.vsFightingPreferedSetComboBox['values'] = self.preferedSetValues
+
+        self.homebrewsPreferedSetLabel = Tk.Label(self.preferedSetForGenreFrame,
+                                                   text=self.guiStrings['HomebrewsPreferedSet'].label)
+        wckToolTips.register(self.homebrewsPreferedSetLabel, self.guiStrings['HomebrewsPreferedSet'].help)
+        self.homebrewsPreferedSetLabel.grid(column=3, row=3, sticky="W", pady=5)
+        self.guiVars['HomebrewsPreferedSet'] = Tk.StringVar()
+        self.guiVars['HomebrewsPreferedSet'].set(self.configuration['HomebrewsPreferedSet'])
+        self.homebrewsPreferedSetComboBox = ttk.Combobox(self.preferedSetForGenreFrame, state="readonly",
+                                                          textvariable=self.guiVars['HomebrewsPreferedSet'])
+        self.homebrewsPreferedSetComboBox.grid(column=4, row=3, sticky="W", pady=5, padx=5)
+        self.homebrewsPreferedSetComboBox['values'] = self.preferedSetValues
         self.__showHide()
 
     def __changeExclusionType(self, event):
@@ -364,6 +377,8 @@ class RetroarchGUI:
                 self.sportPreferedSetComboBox['state'] = 'readonly'
                 self.vsFightingPreferedSetLabel['state'] = 'normal'
                 self.vsFightingPreferedSetComboBox['state'] = 'readonly'
+                self.homebrewsPreferedSetLabel['state'] = 'normal'
+                self.homebrewsPreferedSetComboBox['state'] = 'readonly'
             else:
                 self.beatEmUpPreferedSetLabel['state'] = 'disabled'
                 self.beatEmUpPreferedSetComboBox['state'] = 'disabled'
@@ -387,6 +402,8 @@ class RetroarchGUI:
                 self.sportPreferedSetComboBox['state'] = 'disabled'
                 self.vsFightingPreferedSetLabel['state'] = 'disabled'
                 self.vsFightingPreferedSetComboBox['state'] = 'disabled'
+                self.homebrewsPreferedSetLabel['state'] = 'disabled'
+                self.homebrewsPreferedSetComboBox['state'] = 'disabled'
         else:
             self.preferedSetLabel['state'] = 'disabled'
             self.preferedSetComboBox['state'] = 'disabled'
@@ -413,6 +430,8 @@ class RetroarchGUI:
             self.sportPreferedSetComboBox['state'] = 'disabled'
             self.vsFightingPreferedSetLabel['state'] = 'disabled'
             self.vsFightingPreferedSetComboBox['state'] = 'disabled'
+            self.homebrewsPreferedSetLabel['state'] = 'disabled'
+            self.homebrewsPreferedSetComboBox['state'] = 'disabled'
 
     def __drawButtonsFrame(self):
         self.buttonsFrame = Tk.Frame(self.tabFrame, padx=10)

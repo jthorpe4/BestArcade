@@ -17,6 +17,7 @@ preferedSet;Prefered set;General prefered set in STRICT mode if rom is in same w
 usePreferedSetForGenre;Use prefered set for genre;Check to use prefered set for genres in STRICT mode and define them. Takes precedence over general prefered set if activated
 BeatEmUpPreferedSet;BeatEmUp prefered set;Prefered set for BeatEmUp games
 GunPreferedSet;Gun prefered set;Prefered set for Gun games
+HomebrewsPreferedSet;Homebrews prefered set;Prefered set for Homebrews games
 MiscPreferedSet;Misc prefered set;Prefered set for Misc games
 PlatformPreferedSet;Platform prefered set;Prefered set for Platform games
 PuzzlePreferedSet;Puzzle prefered set;Prefered set for Puzzle games
