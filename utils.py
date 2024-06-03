@@ -115,13 +115,26 @@ def writeGamelistHiddenEntry(gamelistFile, game, genre, useGenreSubFolder):
     gamelist.writeGamelistHiddenEntry(gamelistFile, game + ".zip", genre, useGenreSubFolder)
 
 
-def writeGamelistEntry(gamelistFile, game, image, dat, genre, useGenreSubFolder, test, setKey, testStatus, manual):
+def writeGamelistEntry(gamelistFile, game, image, dat, genre, useGenreSubFolder, test, setKey, testStatus,
+                       manual, video, marquee, thumbnail, bezel):
     frontPic = None
     pdfManual = None
-    if(not image==None):
+    videoFile = None
+    marqueeFile = None
+    thumbnailFile = None
+    bezelFile = None
+    if (not image == None):
         frontPic = "./downloaded_images/" + image
-    if(not manual==None):
+    if (not manual == None):
         pdfManual = "./manuals/" + manual
+    if (not video == None):
+        videoFile = "./videos/" + video
+    if (not marquee == None):
+        marqueeFile = "./downloaded_images/" + marquee
+    if (not thumbnail == None):
+        thumbnailFile = "./downloaded_images/" + thumbnail
+    if (not bezel == None):
+        bezelFile = "./downloaded_images/" + bezel
 
     if game in dat:
         fullName = dat[game].description
@@ -135,7 +148,8 @@ def writeGamelistEntry(gamelistFile, game, image, dat, genre, useGenreSubFolder,
             name = name[:(indPar - 1)].strip()
 
         year = dat[game].year if dat[game].year else ''
-        developer = dat[game].manufacturer.replace('&', '&amp;') if dat[game].manufacturer else ''
+        developer = dat[game].manufacturer.replace(
+            '&', '&amp;') if dat[game].manufacturer else ''
         cloneof = dat[game].cloneof
     else:
         fullName, name, year, developer, cloneof = '', '', '', '', ''
@@ -147,7 +161,8 @@ def writeGamelistEntry(gamelistFile, game, image, dat, genre, useGenreSubFolder,
     else:
         hardware, comments, notes = '', '', ''
 
-    desc = ('Rom : ' + game + ' , Clone of : ' + cloneof + '\n') if cloneof else ('Rom : ' + game + '\n')
+    desc = ('Rom : ' + game + ' , Clone of : ' + cloneof +
+            '\n') if cloneof else ('Rom : ' + game + '\n')
     desc = desc + ('Fullname : ' + fullName + '\n')
     if testStatus is not None:
         desc = desc + ('Status : ' + testStatus + '\n')
@@ -156,5 +171,5 @@ def writeGamelistEntry(gamelistFile, game, image, dat, genre, useGenreSubFolder,
     desc = desc + ((notes + '\n') if notes else '')
     desc = desc + '        '
 
-    gamelist.writeGamelistEntry(gamelistFile, game + ".zip", name, desc, year, frontPic, developer, developer, genre,
-                                useGenreSubFolder, pdfManual)
+    gamelist.writeGamelistEntry(gamelistFile, game + ".zip", name, desc, year, frontPic, developer, developer, genre, useGenreSubFolder,
+                                pdfManual, videoFile, marqueeFile, thumbnailFile, bezelFile)

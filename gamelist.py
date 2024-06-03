@@ -24,7 +24,9 @@ def writeGamelistHiddenEntry(gamelist, romName, genre, useGenreFolder):
 #<marquee>./images/1944-marquee.png</marquee>
 #<thumbnail>./images/1944-thumb.png</thumbnail>
 #<manual>./manuals/1944-manual.pdf</manual>
-def writeGamelistEntry(gamelist, romName, name, desc, year, frontPic, developer, publisher, genre, useGenreFolder,manual):
+#<bezel>./images/outrun-bezel.png</bezel>
+def writeGamelistEntry(gamelist, romName, name, desc, year, frontPic, developer, publisher, genre,
+                        useGenreFolder,manual,video, marquee, thumbnail, bezel):
     romPath = (genre + "/" + romName) if useGenreFolder else romName
     gamelist.write("    <game>\n")
     gamelist.write("        <path>./" + romPath + "</path>\n")
@@ -35,6 +37,14 @@ def writeGamelistEntry(gamelist, romName, name, desc, year, frontPic, developer,
         gamelist.write("        <image>" + frontPic + "</image>\n")
     if(not manual == None):
         gamelist.write("        <manual>" + manual + "</manual>\n")
+    if(not video == None):
+        gamelist.write("        <video>" + video + "</video>\n")
+    if(not marquee == None):
+        gamelist.write("        <marquee>" + marquee + "</marquee>\n")
+    if(not thumbnail == None):
+        gamelist.write("        <thumbnail>" + thumbnail + "</thumbnail>\n")
+    if(not bezel == None):
+        gamelist.write("        <bezel>" + bezel + "</bezel>\n")
     gamelist.write("        <developer>" + developer.replace('&', '&amp;').replace('<', '&lgt;').replace('>', '&rgt;') + "</developer>\n")
     gamelist.write("        <publisher>" + publisher.replace('&', '&amp;').replace('<', '&lgt;').replace('>', '&rgt;') + "</publisher>\n")
     gamelist.write("        <genre>" + genre.replace('[', '').replace(']', '') + "</genre>\n")

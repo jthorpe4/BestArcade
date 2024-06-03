@@ -246,14 +246,24 @@ class Sorter:
                                                  self.properties[game].chd == 'yes'
                         image = self.configuration['imgNameFormat'].replace('{rom}', game)
                         manual = self.configuration['manNameFormat'].replace('{rom}', game)
-                        if(not utils.fileExists(self.configuration['manuals'], manual,dryRun)):
-                            manual ="{rom}-manual.pdf".replace('{rom}', game)
-                            if(not utils.fileExists(self.configuration['manuals'], manual,dryRun)):
-                                manual = None   
-                        if(not utils.fileExists(self.configuration['images'], image,dryRun)):
-                            image ="{rom}-image.png".replace('{rom}', game)
-                            if(not utils.fileExists(self.configuration['images'], image,dryRun)):
-                                image = None   
+                        if (not utils.fileExists(self.configuration['manuals'], manual, dryRun)):
+                            manual = "{rom}-manual.pdf".replace('{rom}', game)
+                            if (not utils.fileExists(self.configuration['manuals'], manual, dryRun)):
+                                manual = None
+                        if (not utils.fileExists(self.configuration['images'], image, dryRun)):
+                            image = "{rom}-image.png".replace('{rom}', game)
+                            if (not utils.fileExists(self.configuration['images'], image, dryRun)):
+                                image = None
+                        video = None
+                        marquee = self.configuration['marNameFormat'].replace('{rom}', game)
+                        thumbnail = self.configuration['thuNameFormat'].replace('{rom}', game)
+                        bezel = self.configuration['bezNameFormat'].replace('{rom}', game)
+                        if (not utils.fileExists(self.configuration['images'], marquee, dryRun)):
+                            marquee = None
+                        if (not utils.fileExists(self.configuration['images'], thumbnail, dryRun)):
+                            thumbnail = None
+                        if (not utils.fileExists(self.configuration['images'], bezel, dryRun)):
+                            bezel = None                               
                         if setKey in selected and not excludedBecauseCHDGame:
                             multiGameFoundInSet = True
                             utils.setFileCopy(self.configuration['exportDir'], setRom, genre, game, setKey,
@@ -264,11 +274,21 @@ class Sorter:
                             testStatus = self.getStatus(testForGame[setKey].status) \
                                 if testForGame is not None and setKey in testForGame else 'UNTESTED &amp; FRESHLY ADDED'
                             utils.writeGamelistEntry(gamelists[setKey], game, image, dats[setKey], genre,
-                                                     useGenreSubFolder, testForGame, setKey, testStatus,manual)
+                                                     useGenreSubFolder, testForGame, setKey, testStatus,
+                                                     manual, video, marquee, thumbnail, bezel)
                             roots[setKey].append(dats[setKey][game].node) if game in dats[setKey] else None
                             if (scrapeImages and not image==None ):
                                 utils.setImageCopy(self.configuration['exportDir'], self.configuration['images'], image,
                                                    setKey, dryRun)
+                                if(not marquee==None):
+                                    utils.setImageCopy(self.configuration['exportDir'], self.configuration['images'], marquee,
+                                                    setKey, dryRun)
+                                if(not thumbnail==None):
+                                    utils.setImageCopy(self.configuration['exportDir'], self.configuration['images'], thumbnail,
+                                                       setKey, dryRun)                                
+                                if(not bezel==None):
+                                    utils.setImageCopy(self.configuration['exportDir'], self.configuration['images'], bezel,
+                                                       setKey, dryRun)   
                             if ( scrapeManuals and not manual==None):
                                 utils.setManualsCopy(self.configuration['exportDir'], self.configuration['manuals'], manual,
                                                    setKey, dryRun)

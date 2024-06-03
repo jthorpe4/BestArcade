@@ -147,6 +147,37 @@ class RetroarchGUI:
         imgFormatEntry = Tk.Entry(self.imagesFrame, textvariable=self.guiVars['imgNameFormat'])
         imgFormatEntry.grid(column=1, row=setRow, columnspan=5, padx=5, sticky="W")
 
+        if self.hardware in ['n100']:
+            setRow = setRow + 1
+            marFormatLabel = Tk.Label(self.imagesFrame, text=self.guiStrings['marNameFormat'].label)
+            wckToolTips.register(marFormatLabel, self.guiStrings['marNameFormat'].help)
+            marFormatLabel.grid(column=0, row=setRow, padx=5, sticky=Tk.W)
+            self.guiVars['marNameFormat'] = Tk.StringVar()
+            self.guiVars['marNameFormat'].set(self.configuration['marNameFormat'])
+            # place entry in dict to retrieve later
+            marFormatEntry = Tk.Entry(self.imagesFrame, textvariable=self.guiVars['marNameFormat'])
+            marFormatEntry.grid(column=1, row=setRow, columnspan=5, padx=5, sticky="W")
+            
+            setRow = setRow + 1
+            thuFormatLabel = Tk.Label(self.imagesFrame, text=self.guiStrings['thuNameFormat'].label)
+            wckToolTips.register(thuFormatLabel, self.guiStrings['thuNameFormat'].help)
+            thuFormatLabel.grid(column=0, row=setRow, padx=5, sticky=Tk.W)
+            self.guiVars['thuNameFormat'] = Tk.StringVar()
+            self.guiVars['thuNameFormat'].set(self.configuration['thuNameFormat'])
+            # place entry in dict to retrieve later
+            thuFormatEntry = Tk.Entry(self.imagesFrame, textvariable=self.guiVars['thuNameFormat'])
+            thuFormatEntry.grid(column=1, row=setRow, columnspan=5, padx=5, sticky="W")
+
+            setRow = setRow + 1
+            bezFormatLabel = Tk.Label(self.imagesFrame, text=self.guiStrings['bezNameFormat'].label)
+            wckToolTips.register(bezFormatLabel, self.guiStrings['bezNameFormat'].help)
+            bezFormatLabel.grid(column=0, row=setRow, padx=5, sticky=Tk.W)
+            self.guiVars['bezNameFormat'] = Tk.StringVar()
+            self.guiVars['bezNameFormat'].set(self.configuration['bezNameFormat'])
+            # place entry in dict to retrieve later
+            bezFormatEntry = Tk.Entry(self.imagesFrame, textvariable=self.guiVars['bezNameFormat'])
+            bezFormatEntry.grid(column=1, row=setRow, columnspan=5, padx=5, sticky="W")
+
     def __drawManualsFrame(self):
         # Manuals frame
         self.manualsFrame = Tk.LabelFrame(self.tabFrame, text="Manuals", padx=10, pady=5)

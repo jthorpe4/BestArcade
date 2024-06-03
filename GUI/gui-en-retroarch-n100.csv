@@ -9,6 +9,9 @@ selectCHDDir;Select;Select CHD set folder
 images;Images folder;Paths to your images set, leave empty if you do not have it
 selectImages;Select;Select your images folder
 imgNameFormat;Image filename format;Format of the image filename
+marNameFormat;Image marquee filename format;Format of the image marquee filename
+thuNameFormat;Image thumbnail filename format;Format of the image thumbnail filename
+bezNameFormat;Image bezel filename format;Format of the image bezel filename
 manuals;Manuals folder;Paths to your manuals, leave empty if you do not have it
 selectManuals;Select;Select your manuals folder
 manNameFormat;Manual filename format;Format of the manual filename

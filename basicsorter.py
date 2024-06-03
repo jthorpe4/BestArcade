@@ -130,28 +130,45 @@ class BasicSorter:
                         multiNameRomFound = True
                         image = self.configuration['imgNameFormat'].replace('{rom}', game)
                         manual = self.configuration['manNameFormat'].replace('{rom}', game)
-                        if(not utils.fileExists(self.configuration['manuals'], manual,dryRun)):
-                            manual ="{rom}-manual.pdf".replace('{rom}', game)
-                            if(not utils.fileExists(self.configuration['manuals'], manual,dryRun)):
+                        if (not utils.fileExists(self.configuration['manuals'], manual, dryRun)):
+                            manual = "{rom}-manual.pdf".replace('{rom}', game)
+                            if (not utils.fileExists(self.configuration['manuals'], manual, dryRun)):
                                 manual = None
-                        if(not utils.fileExists(self.configuration['images'], image,dryRun)):
-                            image ="{rom}-image.png".replace('{rom}', game)
-                            if(not utils.fileExists(self.configuration['images'], image,dryRun)):
-                                image = None                            
+                        if (not utils.fileExists(self.configuration['images'], image, dryRun)):
+                            image = "{rom}-image.png".replace('{rom}', game)
+                            if (not utils.fileExists(self.configuration['images'], image, dryRun)):
+                                image = None
+                        video = None
+                        marquee = self.configuration['marNameFormat'].replace('{rom}', game)
+                        thumbnail = self.configuration['thuNameFormat'].replace('{rom}', game)
+                        bezel = self.configuration['bezNameFormat'].replace('{rom}', game)
+                        if (not utils.fileExists(self.configuration['images'], marquee, dryRun)):
+                            marquee = None
+                        if (not utils.fileExists(self.configuration['images'], thumbnail, dryRun)):
+                            thumbnail = None
+                        if (not utils.fileExists(self.configuration['images'], bezel, dryRun)):
+                            bezel = None                            
                         utils.setFileCopy(self.configuration['exportDir'], setRom, genre, game,
                                           self.setKey, useGenreSubFolder, dryRun)
                         utils.setCHDCopy(self.configuration['exportDir'], setCHD, genre, game,
                                          self.setKey, useGenreSubFolder, dryRun)
                         utils.writeCSV(CSVs[self.setKey], game, None, genre, dats[self.setKey], None, self.setKey)
                         utils.writeGamelistEntry(gamelists[self.setKey], game, image, dats[self.setKey], genre,
-                                                 useGenreSubFolder, None, self.setKey, None, manual)
+                                                 useGenreSubFolder, None, self.setKey, None, 
+                                                 manual, video, marquee, thumbnail ,bezel)
                         roots[self.setKey].append(dats[self.setKey][game].node) if game in dats[self.setKey] else None
-                        if (scrapeImages and not image==None):
+                        if (scrapeImages and not image == None):
                             utils.setImageCopy(self.configuration['exportDir'], self.configuration['images'], image,
                                                self.setKey, dryRun)
-                        if (scrapeManuals and not  manual == None) :
-                            utils.setManualsCopy(self.configuration['exportDir'], self.configuration['manuals'], manual,
+                            utils.setImageCopy(self.configuration['exportDir'], self.configuration['images'], marquee,
                                                self.setKey, dryRun)
+                            utils.setImageCopy(self.configuration['exportDir'], self.configuration['images'], thumbnail,
+                                               self.setKey, dryRun)
+                            utils.setImageCopy(self.configuration['exportDir'], self.configuration['images'], bezel,
+                                               self.setKey, dryRun)
+                        if (scrapeManuals and not manual == None):
+                            utils.setManualsCopy(self.configuration['exportDir'], self.configuration['manuals'], manual,
+                                                 self.setKey, dryRun)
                         self.logger.log(setRom)
 
         # writing and closing everything        
