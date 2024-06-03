@@ -30,6 +30,7 @@ class RetroarchGUI:
         self.romsetFrame = None
         self.selectExportDirButton = None
         self.imagesFrame = None
+        self.manualsFrame = None
         self.parametersFrame = None
         self.preferedSetLabel = None
         self.preferedSetComboBox = None
@@ -62,17 +63,21 @@ class RetroarchGUI:
         self.verifyButton = None
         self.saveButton = None
         self.proceedButton = None
+        self.framerow = 0
 
     def draw(self):
         self.__drawRomsetFrame()
         self.__drawImagesFrame()
+        if self.hardware  in ['n100']:
+            self.__drawManualsFrame()
         self.__drawParametersFrame()
         self.__drawButtonsFrame()
 
     def __drawRomsetFrame(self):
         # Romsets frame
         self.romsetFrame = Tk.LabelFrame(self.tabFrame, text="Your Romsets", padx=10, pady=5)
-        self.romsetFrame.grid(column=0, row=0, sticky="EW", pady=5)
+        self.romsetFrame.grid(column=0, row=self.framerow , sticky="EW", pady=5)
+        self.framerow = self.framerow +1
         self.romsetFrame.grid_columnconfigure(1, weight=1)
         setRow = 0
         romsetKeys = Sorter.setKeys[self.hardware] if self.hardware == 'pi3' else Sorter.setKeys[self.hardware] + ['chd']
@@ -110,7 +115,8 @@ class RetroarchGUI:
     def __drawImagesFrame(self):
         # Images frame
         self.imagesFrame = Tk.LabelFrame(self.tabFrame, text="Images", padx=10, pady=5)
-        self.imagesFrame.grid(column=0, row=1, sticky="EW", pady=5)
+        self.imagesFrame.grid(column=0, row=self.framerow, sticky="EW", pady=5)
+        self.framerow = self.framerow +1
         self.imagesFrame.grid_columnconfigure(1, weight=1)
         setRow = 0
         for path in self.configuration['images'].split('|'):
@@ -141,10 +147,46 @@ class RetroarchGUI:
         imgFormatEntry = Tk.Entry(self.imagesFrame, textvariable=self.guiVars['imgNameFormat'])
         imgFormatEntry.grid(column=1, row=setRow, columnspan=5, padx=5, sticky="W")
 
+    def __drawManualsFrame(self):
+        # Manuals frame
+        self.manualsFrame = Tk.LabelFrame(self.tabFrame, text="Manuals", padx=10, pady=5)
+        self.manualsFrame.grid(column=0, row=self.framerow, sticky="EW", pady=5)
+        self.framerow = self.framerow +1        
+        self.manualsFrame.grid_columnconfigure(1, weight=1)
+        setRow = 0
+        for path in self.configuration['manuals'].split('|'):
+            pathLabel = self.guiStrings['manuals'].label + ' #' + str(setRow + 1)
+            label = Tk.Label(self.manualsFrame, text=pathLabel)
+            wckToolTips.register(label, self.guiStrings['manuals'].help)
+            label.grid(column=0, row=setRow, padx=5, sticky="W")
+            self.guiVars[pathLabel] = Tk.StringVar()
+            self.guiVars[pathLabel].set(path.strip())
+            entry = Tk.Entry(self.manualsFrame, textvariable=self.guiVars[pathLabel])
+            entry.grid(column=1, row=setRow, padx=5, sticky="WE")
+            selectManualsPathButton = Tk.Button(self.manualsFrame, text=self.guiStrings['selectManuals'].label,
+                                               command=lambda feLabel=pathLabel: self.__openFileExplorer(True, feLabel,
+                                                                                                         None, feLabel))
+            selectManualsPathButton.grid(column=2, row=setRow, padx=5, sticky="WE")
+            wckToolTips.register(selectManualsPathButton, self.guiStrings['selectManuals'].help)
+            setRow = setRow + 1
+
+        ttk.Separator(self.manualsFrame, orient=Tk.HORIZONTAL).grid(column=0, row=setRow, columnspan=3, padx=5, pady=5,
+                                                                   sticky="EW")
+        setRow = setRow + 1
+        manFormatLabel = Tk.Label(self.manualsFrame, text=self.guiStrings['manNameFormat'].label)
+        wckToolTips.register(manFormatLabel, self.guiStrings['manNameFormat'].help)
+        manFormatLabel.grid(column=0, row=setRow, padx=5, sticky=Tk.W)
+        self.guiVars['manNameFormat'] = Tk.StringVar()
+        self.guiVars['manNameFormat'].set(self.configuration['manNameFormat'])
+        # place entry in dict to retrieve later
+        manFormatEntry = Tk.Entry(self.manualsFrame, textvariable=self.guiVars['manNameFormat'])
+        manFormatEntry.grid(column=1, row=setRow, columnspan=5, padx=5, sticky="W")
+
     def __drawParametersFrame(self):
         # Parameters frame
         self.parametersFrame = Tk.LabelFrame(self.tabFrame, text="Sorting Parameters", padx=10, pady=5)
-        self.parametersFrame.grid(column=0, row=2, sticky="EW", pady=5)
+        self.parametersFrame.grid(column=0, row=self.framerow, sticky="EW", pady=5)
+        self.framerow = self.framerow +1                
         self.parametersFrame.grid_columnconfigure(1, weight=1)
         self.parametersFrame.grid_columnconfigure(4, weight=2)
 
@@ -161,14 +203,22 @@ class RetroarchGUI:
                                                       text=self.guiStrings['genreSubFolders'].label,
                                                       variable=self.guiVars['genreSubFolders'], onvalue=1, offvalue=0)
         wckToolTips.register(useGenreSubFolderCheckButton, self.guiStrings['genreSubFolders'].help)
-        useGenreSubFolderCheckButton.grid(column=2, row=0, sticky="W")
+        useGenreSubFolderCheckButton.grid(column=1, row=0, sticky="W")
 
         self.guiVars['useImages'] = Tk.IntVar()
         self.guiVars['useImages'].set(self.configuration['useImages'])
         useImagesCheckButton = Tk.Checkbutton(self.parametersFrame, text=self.guiStrings['useImages'].label,
                                               variable=self.guiVars['useImages'], onvalue=1, offvalue=0)
         wckToolTips.register(useImagesCheckButton, self.guiStrings['useImages'].help)
-        useImagesCheckButton.grid(column=3, row=0, sticky="W")
+        useImagesCheckButton.grid(column=2, row=0, sticky="W")
+
+        if self.hardware in ['n100']:
+            self.guiVars['useManuals'] = Tk.IntVar()
+            self.guiVars['useManuals'].set(self.configuration['useManuals'])
+            useManualsCheckButton = Tk.Checkbutton(self.parametersFrame, text=self.guiStrings['useManuals'].label,
+                                              variable=self.guiVars['useManuals'], onvalue=1, offvalue=0)
+            wckToolTips.register(useManualsCheckButton, self.guiStrings['useManuals'].help)
+            useManualsCheckButton.grid(column=3, row=0, sticky="W")
 
         if self.hardware not in ['pi3']:
             self.guiVars['excludeCHDGames'] = Tk.IntVar()
@@ -435,8 +485,8 @@ class RetroarchGUI:
 
     def __drawButtonsFrame(self):
         self.buttonsFrame = Tk.Frame(self.tabFrame, padx=10)
-        self.buttonsFrame.grid(column=0, row=3, sticky="EW", pady=5)
-
+        self.buttonsFrame.grid(column=0, row=self.framerow , sticky="EW", pady=5)
+        self.framerow = self.framerow + 1
         emptyFrame = Tk.Frame(self.buttonsFrame, width=700, padx=10)
         emptyFrame.grid(column=0, row=0, columnspan=3, sticky="EW", pady=5)
         self.verifyButton = Tk.Button(self.buttonsFrame, text=self.guiStrings['verify'].label, command=self.__clickVerify)
@@ -470,6 +520,11 @@ class RetroarchGUI:
                               'selectExportDir', 'selectImages']:
                 if key.help:
                     confFile.write('# ' + key.help.replace('#n', '\n# ') + '\n')
+                if key.id == 'manuals':
+                    manualsValue = self.guiVars[self.guiStrings['manuals'].label + ' #1'].get()
+                    if self.guiStrings['manuals'].label + ' #2' in self.guiVars:
+                        manualsValue = manualsValue + '|' + self.guiVars[self.guiStrings['manuals'].label + ' #2'].get()
+                    confFile.write(key.id + ' = ' + manualsValue + '\n')
                 if key.id == 'images':
                     imagesValue = self.guiVars[self.guiStrings['images'].label + ' #1'].get()
                     if self.guiStrings['images'].label + ' #2' in self.guiVars:
@@ -488,6 +543,11 @@ class RetroarchGUI:
         for key in listKeys:
             if key.id not in ['verify', 'save', 'proceed', 'confirm', 'selectRomsetDir', 'selectDat',
                               'selectExportDir', 'selectImages']:
+                if key.id == 'manuals':
+                    manualsValue = self.guiVars[self.guiStrings['manuals'].label + ' #1'].get()
+                    if self.guiStrings['manuals'].label + ' #2' in self.guiVars:
+                        manualsValue = manualsValue + '|' + self.guiVars[self.guiStrings['manuals'].label + ' #2'].get()
+                    self.configuration['manuals'] = manualsValue                
                 if key.id == 'images':
                     imagesValue = self.guiVars[self.guiStrings['images'].label + ' #1'].get()
                     if self.guiStrings['images'].label + ' #2' in self.guiVars:

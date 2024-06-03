@@ -148,6 +148,7 @@ class Sorter:
         keepLevel = int(self.configuration['keepLevel'])
         usePreferedSetForGenre = True if self.configuration['usePreferedSetForGenre'] == '1' else False
         scrapeImages = True if self.configuration['useImages'] == '1' and self.configuration['images'] else False
+        scrapeManuals = True if self.configuration['useManuals'] == '1' and self.configuration['manuals'] else False
 
         scoreSheet = open(os.path.join(self.configuration['exportDir'], "scoreSheet.csv"), "w", encoding="utf-8")
         scoreSheet.write('rom;' + ';'.join(list(map(lambda key: key + 'Score', self.setKeys[self.hardware]))) + '\n')
@@ -164,6 +165,8 @@ class Sorter:
             os.makedirs(os.path.join(self.configuration['exportDir'], setKey))
             os.makedirs(
                 os.path.join(self.configuration['exportDir'], setKey, 'downloaded_images')) if scrapeImages else None
+            os.makedirs(
+                os.path.join(self.configuration['exportDir'], setKey, 'manuals')) if scrapeManuals else None
             gamelists[setKey] = gamelist.initWrite(os.path.join(self.configuration['exportDir'], setKey))
 
         # get bioses
@@ -181,6 +184,11 @@ class Sorter:
                         gamelist.writeGamelistFolder(gamelists[setKey], genre, genre + '.png')
                         utils.setImageCopy(self.configuration['exportDir'],
                                            os.path.join(self.scriptDir, 'data', 'images'), genre + '.png', setKey,
+                                           dryRun)
+                    if scrapeManuals:
+                        gamelist.writeGamelistFolder(gamelists[setKey], genre, genre + '.pdf')
+                        utils.setManualsCopy(self.configuration['exportDir'],
+                                           os.path.join(self.scriptDir, 'data', 'manuals'), genre + '.pdf', setKey,
                                            dryRun)
 
             # copy bios in each subdirectory
@@ -237,6 +245,11 @@ class Sorter:
                                                  game in self.properties and \
                                                  self.properties[game].chd == 'yes'
                         image = self.configuration['imgNameFormat'].replace('{rom}', game)
+                        manual = self.configuration['manNameFormat'].replace('{rom}', game)
+                        if(not utils.fileExists(self.configuration['manuals'], manual,dryRun)):
+                            manual = None      
+                        if(not utils.fileExists(self.configuration['images'], image,dryRun)):
+                            image = None                                                 
                         if setKey in selected and not excludedBecauseCHDGame:
                             multiGameFoundInSet = True
                             utils.setFileCopy(self.configuration['exportDir'], setRom, genre, game, setKey,
@@ -247,10 +260,13 @@ class Sorter:
                             testStatus = self.getStatus(testForGame[setKey].status) \
                                 if testForGame is not None and setKey in testForGame else 'UNTESTED &amp; FRESHLY ADDED'
                             utils.writeGamelistEntry(gamelists[setKey], game, image, dats[setKey], genre,
-                                                     useGenreSubFolder, testForGame, setKey, testStatus)
+                                                     useGenreSubFolder, testForGame, setKey, testStatus,manual)
                             roots[setKey].append(dats[setKey][game].node) if game in dats[setKey] else None
-                            if scrapeImages:
+                            if (scrapeImages and not image==None ):
                                 utils.setImageCopy(self.configuration['exportDir'], self.configuration['images'], image,
+                                                   setKey, dryRun)
+                            if ( scrapeManuals and not manual==None):
+                                utils.setManualsCopy(self.configuration['exportDir'], self.configuration['manuals'], manual,
                                                    setKey, dryRun)
                     # Works only if most recent game is first in line (raidendx;raidndx not the opposite)
                     if len(selected) == 0 and not multiGameFoundInSet:

@@ -62,6 +62,7 @@ class BasicSorter:
         dryRun = True if self.configuration['dryRun'] == '1' else False
         useGenreSubFolder = True if self.configuration['genreSubFolders'] == '1' else False
         scrapeImages = True if self.configuration['useImages'] == '1' and self.configuration['images'] else False
+        scrapeManuals = True if self.configuration['useManuals'] == '1' and self.configuration['manuals'] else False
 
         CSVs, gamelists, roots = dict(), dict(), dict()
         header = "Genre;Name (mame description);Rom name;Year;Manufacturer;Hardware;Comments;Notes\n"
@@ -76,6 +77,8 @@ class BasicSorter:
         os.makedirs(os.path.join(self.configuration['exportDir'], self.setKey))
         os.makedirs(
             os.path.join(self.configuration['exportDir'], self.setKey, 'downloaded_images')) if scrapeImages else None
+        os.makedirs(
+            os.path.join(self.configuration['exportDir'], self.setKey, 'manuals')) if scrapeManuals else None
         gamelists[self.setKey] = gamelist.initWrite(os.path.join(self.configuration['exportDir'], self.setKey))
 
         # get bioses
@@ -92,6 +95,10 @@ class BasicSorter:
                     gamelist.writeGamelistFolder(gamelists[self.setKey], genre, genre + '.png')
                     utils.setImageCopy(self.configuration['exportDir'], os.path.join(self.scriptDir, 'data', 'images'),
                                        genre + '.png', self.setKey, dryRun)
+                if scrapeManuals:
+                    gamelist.writeGamelistFolder(gamelists[self.setKey], genre, genre + '.pdf')
+                    utils.setManualCopy(self.configuration['exportDir'], os.path.join(self.scriptDir, 'data', 'manuals'),
+                                       genre + '.pdf', self.setKey, dryRun)
 
             # copy bios in each subdirectory
             for bios in self.bioses:
@@ -122,18 +129,25 @@ class BasicSorter:
                     if os.path.exists(setRom) and not excludedBecauseCHDGame:
                         multiNameRomFound = True
                         image = self.configuration['imgNameFormat'].replace('{rom}', game)
+                        manual = self.configuration['manNameFormat'].replace('{rom}', game)
+                        if(not utils.fileExists(self.configuration['manuals'], manual,dryRun)):
+                            manual = None
+                        if(not utils.fileExists(self.configuration['images'], image,dryRun)):
+                            image = None                            
                         utils.setFileCopy(self.configuration['exportDir'], setRom, genre, game,
                                           self.setKey, useGenreSubFolder, dryRun)
                         utils.setCHDCopy(self.configuration['exportDir'], setCHD, genre, game,
                                          self.setKey, useGenreSubFolder, dryRun)
                         utils.writeCSV(CSVs[self.setKey], game, None, genre, dats[self.setKey], None, self.setKey)
                         utils.writeGamelistEntry(gamelists[self.setKey], game, image, dats[self.setKey], genre,
-                                                 useGenreSubFolder, None, self.setKey, None)
+                                                 useGenreSubFolder, None, self.setKey, None, manual)
                         roots[self.setKey].append(dats[self.setKey][game].node) if game in dats[self.setKey] else None
-                        if scrapeImages:
+                        if (scrapeImages and not image==None):
                             utils.setImageCopy(self.configuration['exportDir'], self.configuration['images'], image,
                                                self.setKey, dryRun)
-
+                        if (scrapeManuals and not  manual == None) :
+                            utils.setManualsCopy(self.configuration['exportDir'], self.configuration['manuals'], manual,
+                                               self.setKey, dryRun)
                         self.logger.log(setRom)
 
         # writing and closing everything        

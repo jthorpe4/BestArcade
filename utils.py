@@ -70,6 +70,21 @@ def setImageCopy(exportDir, paths, fileName, targetDir, dryRun):
                 shutil.copy2(filePath, os.path.join(exportDir, targetDir, 'downloaded_images', fileName))
                 return
 
+def fileExists(paths, fileName, dryRun): 
+    if not dryRun:
+        for path in paths.split('|'):
+            filePath = os.path.join(path.strip(), fileName)
+            if os.path.exists(filePath):
+                return True
+    return False
+    
+def setManualsCopy(exportDir, paths, fileName, targetDir, dryRun):
+    if not dryRun:
+        for path in paths.split('|'):
+            filePath = os.path.join(path.strip(), fileName)
+            if os.path.exists(filePath):
+                shutil.copy2(filePath, os.path.join(exportDir, targetDir, 'manuals', fileName))
+                return            
 
 def writeCSV(csvFile, game, score, genre, dat, test, setKey):
     if game in dat:
@@ -100,8 +115,13 @@ def writeGamelistHiddenEntry(gamelistFile, game, genre, useGenreSubFolder):
     gamelist.writeGamelistHiddenEntry(gamelistFile, game + ".zip", genre, useGenreSubFolder)
 
 
-def writeGamelistEntry(gamelistFile, game, image, dat, genre, useGenreSubFolder, test, setKey, testStatus):
-    frontPic = "./downloaded_images/" + image
+def writeGamelistEntry(gamelistFile, game, image, dat, genre, useGenreSubFolder, test, setKey, testStatus, manual):
+    frontPic = None
+    pdfManual = None
+    if(not image==None):
+        frontPic = "./downloaded_images/" + image
+    if(not manual==None):
+        pdfManual = "./manuals/" + manual
 
     if game in dat:
         fullName = dat[game].description
@@ -137,4 +157,4 @@ def writeGamelistEntry(gamelistFile, game, image, dat, genre, useGenreSubFolder,
     desc = desc + '        '
 
     gamelist.writeGamelistEntry(gamelistFile, game + ".zip", name, desc, year, frontPic, developer, developer, genre,
-                                useGenreSubFolder)
+                                useGenreSubFolder, pdfManual)

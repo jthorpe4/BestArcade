@@ -9,6 +9,9 @@ selectCHDDir;Select;Select CHD set folder
 images;Images folder;Paths to your images set, leave empty if you do not have it
 selectImages;Select;Select your images folder
 imgNameFormat;Image filename format;Format of the image filename
+manuals;Manuals folder;Paths to your manuals, leave empty if you do not have it
+selectManuals;Select;Select your manuals folder
+manNameFormat;Manual filename format;Format of the manual filename
 dryRun;Dry run;Check this to generate only dat and CSV files, no roms will be copied
 keepLevel;Keep level;Select minimum working level at which roms will be kept
 keepNotTested;Keep not tested roms;Check to keep untested roms even in STRICT mode
@@ -28,6 +31,7 @@ SportPreferedSet;Sport prefered set;Prefered set for Sport games
 VsFightingPreferedSet;VsFighting prefered set;Prefered set for VsFighting games
 genreSubFolders;Use genre subfolders;Check to use genre subfolders for roms
 useImages;Scrape images;Check to use images for games and folders
+useManuals;Scrape Manuals;Check to use manusls for games and folders
 excludeCHDGames;Exclude CHD Games;Check to exclude CHD games from generation
 verify;Verify;Check that your paths are okay
 save;Save;Save your configuration to file
