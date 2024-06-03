@@ -131,9 +131,13 @@ class BasicSorter:
                         image = self.configuration['imgNameFormat'].replace('{rom}', game)
                         manual = self.configuration['manNameFormat'].replace('{rom}', game)
                         if(not utils.fileExists(self.configuration['manuals'], manual,dryRun)):
-                            manual = None
+                            manual ="{rom}-manual.pdf".replace('{rom}', game)
+                            if(not utils.fileExists(self.configuration['manuals'], manual,dryRun)):
+                                manual = None
                         if(not utils.fileExists(self.configuration['images'], image,dryRun)):
-                            image = None                            
+                            image ="{rom}-image.png".replace('{rom}', game)
+                            if(not utils.fileExists(self.configuration['images'], image,dryRun)):
+                                image = None                            
                         utils.setFileCopy(self.configuration['exportDir'], setRom, genre, game,
                                           self.setKey, useGenreSubFolder, dryRun)
                         utils.setCHDCopy(self.configuration['exportDir'], setCHD, genre, game,

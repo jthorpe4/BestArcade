@@ -247,9 +247,13 @@ class Sorter:
                         image = self.configuration['imgNameFormat'].replace('{rom}', game)
                         manual = self.configuration['manNameFormat'].replace('{rom}', game)
                         if(not utils.fileExists(self.configuration['manuals'], manual,dryRun)):
-                            manual = None      
+                            manual ="{rom}-manual.pdf".replace('{rom}', game)
+                            if(not utils.fileExists(self.configuration['manuals'], manual,dryRun)):
+                                manual = None   
                         if(not utils.fileExists(self.configuration['images'], image,dryRun)):
-                            image = None                                                 
+                            image ="{rom}-image.png".replace('{rom}', game)
+                            if(not utils.fileExists(self.configuration['images'], image,dryRun)):
+                                image = None   
                         if setKey in selected and not excludedBecauseCHDGame:
                             multiGameFoundInSet = True
                             utils.setFileCopy(self.configuration['exportDir'], setRom, genre, game, setKey,

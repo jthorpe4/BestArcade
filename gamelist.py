@@ -20,7 +20,10 @@ def writeGamelistHiddenEntry(gamelist, romName, genre, useGenreFolder):
     gamelist.write("        <hidden>true</hidden>\n")
     gamelist.write("    </game>\n")
 
-
+#<video>./videos/1944.mp4</video>
+#<marquee>./images/1944-marquee.png</marquee>
+#<thumbnail>./images/1944-thumb.png</thumbnail>
+#<manual>./manuals/1944-manual.pdf</manual>
 def writeGamelistEntry(gamelist, romName, name, desc, year, frontPic, developer, publisher, genre, useGenreFolder,manual):
     romPath = (genre + "/" + romName) if useGenreFolder else romName
     gamelist.write("    <game>\n")
